@@ -1,9 +1,11 @@
 import React from 'react'
 import Head from 'next/head'
 import Nav from '../components/nav'
+import { withLDConsumer } from 'launchdarkly-react-client-sdk'
 
-const Home = () => (
-  <div>
+const Home = ({flags}) => {
+  console.log('flags', flags)
+  return (<div>
     <Head>
       <title>Home</title>
       <link rel="icon" href="/favicon.ico" />
@@ -18,21 +20,24 @@ const Home = () => (
       </p>
 
       <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
+      <table>
+      <thead>
+        <tr>
+          <th>Flag</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          Object.entries(flags).map(([key, value]) => {
+            return (<tr>
+              <td><strong>{key}</strong></td>
+            <td>{ value.toString() }</td>
+            </tr>)
+          })
+        }
+      </tbody>
+      </table>
       </div>
     </div>
 
@@ -84,5 +89,6 @@ const Home = () => (
     `}</style>
   </div>
 )
+    }
 
-export default Home
+export default withLDConsumer()(Home)
